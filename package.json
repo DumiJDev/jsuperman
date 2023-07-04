@@ -1,6 +1,6 @@
 {
-  "name": "superman",
-  "version": "1.0.1",
+  "name": "jsuperman",
+  "version": "1.0.0",
   "description": "A library to run many collections with newman",
   "main": "build/index.js",
   "repository": "https://github.com/DumiJDev/superman.git",
@@ -28,5 +28,6 @@
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "keywords": ["htmlextra", "newman", "newman-run", "cli"]
 }
