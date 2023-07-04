@@ -1,9 +1,9 @@
 {
   "name": "jsuperman",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A library to run many collections with newman",
   "main": "build/index.js",
-  "repository": "https://github.com/DumiJDev/superman.git",
+  "repository": "https://github.com/DumiJDev/jsuperman.git",
   "author": "DumiJDev",
   "license": "MIT",
   "private": false,
@@ -12,6 +12,7 @@
     "build": "rimraf ./build && tsc",
     "start": "node build/index"
   },
+  "bin": "./build/index.js",
   "dependencies": {
     "allure-commandline": "^2.23.0",
     "figlet": "^1.6.0",
