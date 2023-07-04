@@ -1,6 +1,6 @@
 <h1 id="title" align="center">Superman cli</h1>
 
-<p align="center"><img src="https://socialify.git.ci/DumiJDev/superman/image?language=1&owner=1&name=1&stargazers=1&theme=Light" alt="project-image"></p>
+<p align="center"><img src="https://socialify.git.ci/DumiJDev/superman/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Solid&pulls=1&stargazers=1&theme=Dark" alt="project-image"></p>
 
 <p id="description">The project is a Node.js library that provides a command-line interface (CLI) for running API test collections using Newman. It allows users to execute multiple collections by specifying JSON file paths or URLs. The library supports optional environment files and generates reports in CLI HTML and Allure formats. Its goal is to simplify API testing provide detailed reports and aid in quality assurance.</p>
 
