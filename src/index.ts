@@ -3,6 +3,7 @@ import yargs from "yargs";
 import fs from "fs";
 import { NewmanOptions, SupermanInput } from "./models";
 import runNewmanWithReporters from "./utils/reporters";
+import figlet from "figlet";
 
 // Configurar argumentos da linha de comando usando yargs
 const argv = yargs
@@ -31,6 +32,10 @@ const argv = yargs
 
 // Obtém o caminho do arquivo de configuração do argumento 'config' fornecido via CLI
 const configFile = argv.file;
+
+console.log(
+  `\x1b[34m${figlet.textSync("Superman cli", { font: "Doom" })}\x1b[0m`
+);
 
 // Carrega as informações do arquivo de configuração
 const config = JSON.parse(

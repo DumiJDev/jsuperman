@@ -40,40 +40,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = __importDefault(require("fs"));
-var newman_reporter_htmlextra_1 = __importDefault(require("newman-reporter-htmlextra"));
 var allure_commandline_1 = __importDefault(require("allure-commandline"));
 var _1 = require("./");
 function generateAllureReport(port) {
     return __awaiter(this, void 0, void 0, function () {
-        var reportPath, generation;
         return __generator(this, function (_a) {
-            reportPath = "./allure-report";
-            generation = (0, allure_commandline_1.default)([
-                "generate",
-                "./newman-report",
-                "--output",
-                reportPath,
-            ]);
-            console.log(generation);
-            generation.on("exit", function (exitCode) {
-                console.log("Generation is finished with code:", exitCode);
-            });
-            console.log("Relatório do Allure gerado em:", reportPath);
-            return [2 /*return*/];
-        });
-    });
-}
-function generateHtmlExtraReport() {
-    return __awaiter(this, void 0, void 0, function () {
-        var reportPath, options;
-        return __generator(this, function (_a) {
-            reportPath = "./htmlextra-report";
-            options = {
-                reportTitle: "Relatório do Newman",
-                outputPath: reportPath,
-            };
-            newman_reporter_htmlextra_1.default.process("./newman-report.json", options);
-            console.log("Relatório HTML Extra gerado em:", reportPath);
+            (0, allure_commandline_1.default)(["generate", "./newman-report.json"]);
+            (0, allure_commandline_1.default)(["serve", "allure-results", "-p", port ? port : "4444"]);
             return [2 /*return*/];
         });
     });
@@ -108,9 +81,6 @@ function runNewmanWithReporters(list, options) {
                     fs_1.default.writeFileSync("./newman-report.json", JSON.stringify(results, null, 2));
                     return [4 /*yield*/, generateAllureReport(options === null || options === void 0 ? void 0 : options.port)];
                 case 7:
-                    _a.sent();
-                    return [4 /*yield*/, generateHtmlExtraReport()];
-                case 8:
                     _a.sent();
                     return [2 /*return*/, Promise.resolve(results.length)];
             }

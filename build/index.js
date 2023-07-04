@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var yargs_1 = __importDefault(require("yargs"));
 var fs_1 = __importDefault(require("fs"));
 var reporters_1 = __importDefault(require("./utils/reporters"));
+var figlet_1 = __importDefault(require("figlet"));
 // Configurar argumentos da linha de comando usando yargs
 var argv = yargs_1.default
     .option("globals", {
@@ -17,7 +18,11 @@ var argv = yargs_1.default
     alias: "p",
     describe: "Porta onde será acessado o relatório",
     type: "string",
-    default: '007'
+})
+    .option("iteration", {
+    alias: "i",
+    describe: "Número de iterações",
+    type: "number",
 })
     .option("file", {
     alias: "f",
@@ -27,6 +32,7 @@ var argv = yargs_1.default
 }).argv;
 // Obtém o caminho do arquivo de configuração do argumento 'config' fornecido via CLI
 var configFile = argv.file;
+console.log("\u001B[34m".concat(figlet_1.default.textSync("Superman cli", { font: "Doom" }), "\u001B[0m"));
 // Carrega as informações do arquivo de configuração
 var config = JSON.parse(fs_1.default.readFileSync(configFile, "utf8"));
 (0, reporters_1.default)(config, argv)
