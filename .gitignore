@@ -1,0 +1,8 @@
+node_modules
+newman
+allure-report
+allure-results
+reports-newman
+file.json
+test.json
+newman-report.json

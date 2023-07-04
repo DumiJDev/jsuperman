@@ -1,0 +1,32 @@
+{
+  "name": "superman",
+  "version": "1.0.0",
+  "description": "A library to run many collections with newman",
+  "main": "build/index.js",
+  "repository": "https://github.com/DumiJDev/superman.git",
+  "author": "DumiJDev",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "dev": "npx nodemon",
+    "build": "rimraf ./build && tsc"
+  },
+  "dependencies": {
+    "allure-commandline": "^2.23.0",
+    "figlet": "^1.6.0",
+    "newman": "^5.3.2",
+    "newman-reporter-allure": "^2.4.0",
+    "newman-reporter-htmlextra": "^1.22.11",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.6",
+    "@types/newman": "^5.3.3",
+    "@types/node": "^20.3.3",
+    "@types/yargs": "^17.0.24",
+    "nodemon": "^2.0.22",
+    "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
