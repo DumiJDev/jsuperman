@@ -6,3 +6,4 @@ reports-newman
 file.json
 test.json
 newman-report.json
+environment

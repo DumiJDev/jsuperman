@@ -1,4 +1,4 @@
-<h1 id="title" align="center">Superman cli</h1>
+<h1 id="title" align="center">JSuperman cli</h1>
 
 <p align="center"><img src="https://socialify.git.ci/DumiJDev/superman/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Solid&pulls=1&stargazers=1&theme=Dark" alt="project-image"></p>
 
@@ -6,16 +6,16 @@
 
 <h2>🛠️ Installation Steps:</h2>
 
-<p>1. npm install -g superman</p>
+<p>1. npm install -g jsuperman</p>
 
 ```
-superman -f /path/to/config/file.json
+jsuperman -f /path/to/config/file.json
 ```
 
-<p>2. npm install -g superman</p>
+<p>2. npm install -g jsuperman</p>
 
 ```
-superman -f /path/to/config/file.json -p 
+jsuperman -f /path/to/config/file.json -p 
 ```
 
 <h2>💻 Built with</h2>

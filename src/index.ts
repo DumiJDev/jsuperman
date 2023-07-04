@@ -31,7 +31,7 @@ const argv = yargs
   }).argv as NewmanOptions;
 
 // Obtém o caminho do arquivo de configuração do argumento 'config' fornecido via CLI
-const configFile = argv.file;
+const configFile = argv.file.endsWith(".json") ? argv.file : argv.file + ".json";
 
 console.log(
   `\x1b[34m${figlet.textSync("Superman cli", { font: "Doom" })}\x1b[0m`

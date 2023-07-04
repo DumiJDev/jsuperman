@@ -23,6 +23,7 @@ export async function runNewmanWithEnvironment(
       },
     },
     globals: options?.globals,
+    iterationCount: options?.iteration ? options.iteration : 1
   };
 
   return new Promise((resolve, reject) => {
@@ -55,6 +56,7 @@ export async function runNewman(
       },
     },
     globals: options?.globals,
+    iterationCount: options?.iteration ? options.iteration : 1
   };
 
   return new Promise((resolve, reject) => {
