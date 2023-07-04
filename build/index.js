@@ -31,7 +31,7 @@ var argv = yargs_1.default
     demandOption: true,
 }).argv;
 // Obtém o caminho do arquivo de configuração do argumento 'config' fornecido via CLI
-var configFile = argv.file;
+var configFile = argv.file.endsWith(".json") ? argv.file : argv.file + ".json";
 console.log("\u001B[34m".concat(figlet_1.default.textSync("Superman cli", { font: "Doom" }), "\u001B[0m"));
 // Carrega as informações do arquivo de configuração
 var config = JSON.parse(fs_1.default.readFileSync(configFile, "utf8"));

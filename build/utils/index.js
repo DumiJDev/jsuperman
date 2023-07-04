@@ -56,6 +56,7 @@ function runNewmanWithEnvironment(collection, environment, options) {
                     },
                 },
                 globals: options === null || options === void 0 ? void 0 : options.globals,
+                iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1
             };
             return [2 /*return*/, new Promise(function (resolve, reject) {
                     newman_1.default.run(newmanOptions, function (error, summary) {
@@ -85,6 +86,7 @@ function runNewman(collection, options) {
                     },
                 },
                 globals: options === null || options === void 0 ? void 0 : options.globals,
+                iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1
             };
             return [2 /*return*/, new Promise(function (resolve, reject) {
                     newman_1.default.run(newmanOptions, function (error, summary) {

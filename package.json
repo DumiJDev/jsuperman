@@ -1,6 +1,6 @@
 {
   "name": "jsuperman",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library to run many collections with newman",
   "main": "build/index.js",
   "repository": "https://github.com/DumiJDev/superman.git",
@@ -9,11 +9,13 @@
   "private": false,
   "scripts": {
     "dev": "npx nodemon",
-    "build": "rimraf ./build && tsc"
+    "build": "rimraf ./build && tsc",
+    "start": "node build/index"
   },
   "dependencies": {
     "allure-commandline": "^2.23.0",
     "figlet": "^1.6.0",
+    "fs-extra": "^11.1.1",
     "newman": "^5.3.2",
     "newman-reporter-allure": "^2.4.0",
     "newman-reporter-htmlextra": "^1.22.11",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@types/figlet": "^1.5.6",
+    "@types/fs-extra": "^11.0.1",
     "@types/newman": "^5.3.3",
     "@types/node": "^20.3.3",
     "@types/yargs": "^17.0.24",
@@ -29,5 +32,11 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
-  "keywords": ["htmlextra", "newman", "newman-run", "cli"]
+  "keywords": [
+    "htmlextra",
+    "newman",
+    "newman-run",
+    "cli",
+    "postman"
+  ]
 }
