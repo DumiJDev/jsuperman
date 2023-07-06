@@ -39,11 +39,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var allure_commandline_1 = __importDefault(require("allure-commandline"));
 var fs_1 = __importDefault(require("fs"));
 var fs_extra_1 = __importDefault(require("fs-extra"));
-var allure_commandline_1 = __importDefault(require("allure-commandline"));
 var _1 = require("./");
-function serveAllureReport(port) {
+function starsAllureServer(port) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (fs_extra_1.default.pathExistsSync("allure-results"))
@@ -81,7 +81,7 @@ function runNewmanWithReporters(list, options) {
                     return [3 /*break*/, 1];
                 case 6:
                     fs_1.default.writeFileSync("./newman-report.json", JSON.stringify(results, null, 2));
-                    return [4 /*yield*/, serveAllureReport(options === null || options === void 0 ? void 0 : options.port)];
+                    return [4 /*yield*/, starsAllureServer(options === null || options === void 0 ? void 0 : options.port)];
                 case 7:
                     _a.sent();
                     return [2 /*return*/, Promise.resolve(results.length)];

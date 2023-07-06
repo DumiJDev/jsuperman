@@ -1,12 +1,12 @@
+import allure from "allure-commandline";
 import fs from "fs";
 import fse from "fs-extra";
 import { NewmanRunExecution } from "newman";
-import allure from "allure-commandline";
 
 import { NewmanOptions, SupermanInput } from "../models";
 import { runNewman, runNewmanWithEnvironment } from "./";
 
-async function serveAllureReport(port: string | undefined) {
+async function starsAllureServer(port: string | undefined) {
   if (fse.pathExistsSync("allure-results")) fse.removeSync("allure-results");
 
   allure(["serve", "allure-results", "-p", port ? port : "4444"]);
@@ -36,7 +36,7 @@ export default async function runNewmanWithReporters(
 
   fs.writeFileSync("./newman-report.json", JSON.stringify(results, null, 2));
 
-  await serveAllureReport(options?.port);
+  await starsAllureServer(options?.port);
 
   return Promise.resolve(results.length);
 }
