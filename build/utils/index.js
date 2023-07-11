@@ -39,8 +39,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runNewman = exports.runNewmanWithEnvironment = void 0;
+exports.buildConfig = exports.runNewman = exports.runNewmanWithEnvironment = void 0;
+var fs_1 = __importDefault(require("fs"));
 var newman_1 = __importDefault(require("newman"));
+var axios_1 = __importDefault(require("axios"));
 function runNewmanWithEnvironment(collection, environment, options) {
     return __awaiter(this, void 0, void 0, function () {
         var newmanOptions;
@@ -56,7 +58,7 @@ function runNewmanWithEnvironment(collection, environment, options) {
                     },
                 },
                 globals: options === null || options === void 0 ? void 0 : options.globals,
-                iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1
+                iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1,
             };
             return [2 /*return*/, new Promise(function (resolve, reject) {
                     newman_1.default.run(newmanOptions, function (error, summary) {
@@ -86,7 +88,7 @@ function runNewman(collection, options) {
                     },
                 },
                 globals: options === null || options === void 0 ? void 0 : options.globals,
-                iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1
+                iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1,
             };
             return [2 /*return*/, new Promise(function (resolve, reject) {
                     newman_1.default.run(newmanOptions, function (error, summary) {
@@ -102,3 +104,29 @@ function runNewman(collection, options) {
     });
 }
 exports.runNewman = runNewman;
+function buildConfig(_a) {
+    var file = _a.file, url = _a.url;
+    return __awaiter(this, void 0, void 0, function () {
+        var configFile, _b, data, status;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    if (!file) return [3 /*break*/, 1];
+                    configFile = (file === null || file === void 0 ? void 0 : file.endsWith(".json")) ? file : file + ".json";
+                    return [2 /*return*/, JSON.parse(fs_1.default.readFileSync(configFile, "utf8"))];
+                case 1:
+                    if (!url) return [3 /*break*/, 3];
+                    console.log();
+                    return [4 /*yield*/, axios_1.default.get(url)];
+                case 2:
+                    _b = _c.sent(), data = _b.data, status = _b.status;
+                    if (status !== 200) {
+                        throw new Error(data);
+                    }
+                    return [2 /*return*/, data];
+                case 3: throw new Error("File or url config is required");
+            }
+        });
+    });
+}
+exports.buildConfig = buildConfig;

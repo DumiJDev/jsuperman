@@ -1,23 +1,24 @@
 #!/usr/bin/env node
 
-import fs from "fs";
-import { SupermanInput } from "./models";
-import runNewmanWithReporters from "./utils/reporters";
-import figlet from "figlet";
 import args from "./utils/args";
+import runNewmanWithReporters from "./utils/reporters";
+import { beautify } from "./utils/font";
+import { buildConfig } from "./utils";
+import chalk from "chalk";
 
-// Obtém o caminho do arquivo de configuração do argumento 'config' fornecido via CLI
-const configFile = args.file.endsWith(".json") ? args.file : args.file + ".json";
+async function main() {
+  console.log(chalk.blue(beautify("JSuperman")));
 
-console.log(
-  `\x1b[34m${figlet.textSync("Superman cli", { font: "Doom" })}\x1b[0m`
-);
+  try {
+    const config = await buildConfig(args);
 
-// Carrega as informações do arquivo de configuração
-const config = JSON.parse(
-  fs.readFileSync(configFile, "utf8")
-) as SupermanInput[];
+    const items = await runNewmanWithReporters(config, args);
 
-runNewmanWithReporters(config, args)
-  .then((items) => console.log("Foram processadas:", items))
-  .catch((error) => console.error(error));
+    console.log("Processed:", items);
+  } catch (error: any) {
+    console.log("Occurred unexpected error:", chalk.red(error.message));
+    process.exit(0);
+  }
+}
+
+main();

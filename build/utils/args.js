@@ -20,9 +20,13 @@ exports.default = yargs_1.default
     describe: "Número de iterações",
     type: "number",
 })
+    .option("url", {
+    alias: "u",
+    describe: "Url para acessar o as coleções e ambientes",
+    type: "string"
+})
     .option("file", {
     alias: "f",
     describe: "Caminho para o ficheiro onde estão todas as coleções e ambientes",
-    type: "string",
-    demandOption: true,
+    type: "string"
 }).argv;

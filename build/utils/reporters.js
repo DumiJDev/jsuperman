@@ -44,14 +44,8 @@ var fs_1 = __importDefault(require("fs"));
 var fs_extra_1 = __importDefault(require("fs-extra"));
 var _1 = require("./");
 function starsAllureServer(port) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            if (fs_extra_1.default.pathExistsSync("allure-results"))
-                fs_extra_1.default.removeSync("allure-results");
-            (0, allure_commandline_1.default)(["serve", "allure-results", "-p", port ? port : "4444"]);
-            return [2 /*return*/];
-        });
-    });
+    var gen = (0, allure_commandline_1.default)(["serve", "allure-results", "-p", port ? port : "4444"]);
+    console.log(gen);
 }
 function runNewmanWithReporters(list, options) {
     return __awaiter(this, void 0, void 0, function () {
@@ -60,11 +54,14 @@ function runNewmanWithReporters(list, options) {
             switch (_a.label) {
                 case 0:
                     results = [];
+                    if (fs_extra_1.default.pathExistsSync("allure-results"))
+                        fs_extra_1.default.removeSync("allure-results");
                     _i = 0, list_1 = list;
                     _a.label = 1;
                 case 1:
-                    if (!(_i < list_1.length)) return [3 /*break*/, 6];
+                    if (!(_i < list_1.length)) return [3 /*break*/, 8];
                     item = list_1[_i];
+                    if (!item.collection) return [3 /*break*/, 6];
                     if (!item.environment) return [3 /*break*/, 3];
                     return [4 /*yield*/, (0, _1.runNewmanWithEnvironment)(item.collection, item.environment, options)];
                 case 2:
@@ -76,14 +73,16 @@ function runNewmanWithReporters(list, options) {
                     executions = _a.sent();
                     results.push.apply(results, executions);
                     _a.label = 5;
-                case 5:
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    console.log("Collection not found");
+                    _a.label = 7;
+                case 7:
                     _i++;
                     return [3 /*break*/, 1];
-                case 6:
+                case 8:
                     fs_1.default.writeFileSync("./newman-report.json", JSON.stringify(results, null, 2));
-                    return [4 /*yield*/, starsAllureServer(options === null || options === void 0 ? void 0 : options.port)];
-                case 7:
-                    _a.sent();
+                    starsAllureServer(options === null || options === void 0 ? void 0 : options.port);
                     return [2 /*return*/, Promise.resolve(results.length)];
             }
         });
