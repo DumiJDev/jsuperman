@@ -1,17 +1,15 @@
-import newman, {
-  NewmanRunExecution,
-  NewmanRunOptions,
-  NewmanRunSummary,
-} from "newman";
+import axios from "axios";
+import chalk from "chalk";
+import fs from "fs";
+import newman, { NewmanRunExecution, NewmanRunOptions, NewmanRunSummary } from "newman";
 
-import { NewmanOptions } from "../models";
+import { NewmanOptions, SupermanInput } from "../models";
 
 export async function runNewmanWithEnvironment(
   collection: string,
   environment: string,
   options: NewmanOptions | undefined
 ): Promise<NewmanRunExecution[]> {
-
   const newmanOptions: NewmanRunOptions = {
     collection: collection,
     environment: environment,
@@ -20,10 +18,12 @@ export async function runNewmanWithEnvironment(
       htmlextra: {
         browserTitle: "Superman reports",
         title: "Superman reports",
+        displayProgressBar: true,
+        export: "reports/report.html",
       },
     },
     globals: options?.globals,
-    iterationCount: options?.iteration ? options.iteration : 1
+    iterationCount: options?.iteration ? options.iteration : 1,
   };
 
   return new Promise((resolve, reject) => {
@@ -31,10 +31,9 @@ export async function runNewmanWithEnvironment(
       newmanOptions,
       (error: Error | null, summary: NewmanRunSummary) => {
         if (error) {
-          reject(error)
-        }
-        else {
-          resolve(summary.run.executions)
+          reject(error);
+        } else {
+          resolve(summary.run.executions);
         }
       }
     );
@@ -45,7 +44,6 @@ export async function runNewman(
   collection: string,
   options: NewmanOptions | undefined
 ): Promise<NewmanRunExecution[]> {
-
   const newmanOptions: NewmanRunOptions = {
     collection: collection,
     reporters: ["cli", "htmlextra", "allure"],
@@ -53,10 +51,12 @@ export async function runNewman(
       htmlextra: {
         browserTitle: "Superman reports",
         title: "Superman reports",
+        displayProgressBar: true,
+        export: "reports/report.html",
       },
     },
     globals: options?.globals,
-    iterationCount: options?.iteration ? options.iteration : 1
+    iterationCount: options?.iteration ? options.iteration : 1,
   };
 
   return new Promise((resolve, reject) => {
@@ -64,12 +64,43 @@ export async function runNewman(
       newmanOptions,
       (error: Error | null, summary: NewmanRunSummary) => {
         if (error) {
-          reject(error)
-        }
-        else {
-          resolve(summary.run.executions)
+          reject(error);
+        } else {
+          resolve(summary.run.executions);
         }
       }
     );
   });
+}
+
+export async function buildConfig({
+  file,
+  url,
+}: NewmanOptions): Promise<SupermanInput[]> {
+  if (file) {
+    try {
+      const configFile = file?.endsWith(".json") ? file : file + ".json";
+
+      return JSON.parse(fs.readFileSync(configFile, "utf8")) as SupermanInput[];
+    } catch (error) {
+      throw error;
+    }
+  } else if (url) {
+    const requestUrl =
+      url.startsWith("http://") || url.startsWith("https://")
+        ? url
+        : `http://${url}`;
+    console.log("url:", chalk.blue(requestUrl));
+    try {
+      const { data, status } = await axios.get(requestUrl);
+
+      if (status !== 200) {
+        throw new Error(data as string);
+      }
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  } else throw new Error("File or url config is required");
 }

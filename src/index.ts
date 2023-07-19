@@ -1,47 +1,45 @@
-import yargs from "yargs";
+#!/usr/bin/env node
 
-import fs from "fs";
-import { NewmanOptions, SupermanInput } from "./models";
-import runNewmanWithReporters from "./utils/reporters";
-import figlet from "figlet";
+import chalk from "chalk";
+import { schedule, validate } from "node-cron";
 
-// Configurar argumentos da linha de comando usando yargs
-const argv = yargs
-  .option("globals", {
-    alias: "g",
-    describe: "Variáveis globais a serem definidas",
-    type: "string",
-  })
-  .option("port", {
-    alias: "p",
-    describe: "Porta onde será acessado o relatório",
-    type: "string",
-  })
-  .option("iteration", {
-    alias: "i",
-    describe: "Número de iterações",
-    type: "number",
-  })
-  .option("file", {
-    alias: "f",
-    describe:
-      "Caminho para o ficheiro onde estão todas as coleções e ambientes",
-    type: "string",
-    demandOption: true,
-  }).argv as NewmanOptions;
+import { buildConfig } from "./utils";
+import args from "./utils/args";
+import { beautify } from "./utils/font";
+import runNewmanWithReporters, { stopsAllureServer } from "./utils/reporters";
 
-// Obtém o caminho do arquivo de configuração do argumento 'config' fornecido via CLI
-const configFile = argv.file.endsWith(".json") ? argv.file : argv.file + ".json";
+async function main() {
+  console.log(chalk.blue(beautify("JSuperman")));
 
-console.log(
-  `\x1b[34m${figlet.textSync("Superman cli", { font: "Doom" })}\x1b[0m`
-);
+  try {
+    if (args.cron) {
+      console.log("Scheduled:", chalk.blue(args.cron));
 
-// Carrega as informações do arquivo de configuração
-const config = JSON.parse(
-  fs.readFileSync(configFile, "utf8")
-) as SupermanInput[];
+      schedule(
+        args.cron && validate(args.cron.replace('"', ""))
+          ? args.cron.replace('"', "")
+          : "0 0 */2 * * *",
+        () => {
+          buildConfig(args).then((config) => {
+            stopsAllureServer();
 
-runNewmanWithReporters(config, argv)
-  .then((items) => console.log("Foram processadas:", items))
-  .catch((error) => console.error(error));
+            runNewmanWithReporters(config, args).then((items) => {
+              console.log("Processed:", items);
+            });
+          });
+        }
+      );
+    } else {
+      buildConfig(args).then((config) => {
+        runNewmanWithReporters(config, args).then((items) => {
+          console.log("Processed:", items);
+        });
+      });
+    }
+  } catch (error: any) {
+    console.log("Occurred unexpected error:", chalk.red(error.message));
+    process.exit(0);
+  }
+}
+
+main();
