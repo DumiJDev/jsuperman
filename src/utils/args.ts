@@ -17,6 +17,7 @@ export default yargs
     alias: "i",
     describe: "Número de iterações",
     type: "number",
+    default: 1
   })
   .option("url", {
     alias: "u",
@@ -33,6 +34,21 @@ export default yargs
     alias: "r",
     describe: "Url onde se deseja enviar os resultados dos reportes",
     type: "string",
+  })
+  .option("export", {
+    alias: "e",
+    describe: "Caminho para onde sedeseja exportar os resultados em json",
+    type: "string"
+  }).option("quiet", {
+    alias: "q",
+    describe: "Indicador para rodar o servidor em modo quiet",
+    type: "boolean",
+    default: false
+  })
+  .option("cron", {
+    alias: "c",
+    describe: "",
+    type: "string"
   })
   .option("file", {
     alias: "f",

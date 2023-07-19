@@ -11,6 +11,9 @@ export type NewmanOptions = {
   url: string | undefined;
   serve: boolean;
   report: string | undefined;
+  export: string | undefined;
+  quiet: boolean;
+  cron: string | undefined
 };
 
 export type Environment = {

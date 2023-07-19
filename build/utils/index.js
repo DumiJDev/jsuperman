@@ -40,9 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildConfig = exports.runNewman = exports.runNewmanWithEnvironment = void 0;
+var axios_1 = __importDefault(require("axios"));
+var chalk_1 = __importDefault(require("chalk"));
 var fs_1 = __importDefault(require("fs"));
 var newman_1 = __importDefault(require("newman"));
-var axios_1 = __importDefault(require("axios"));
 function runNewmanWithEnvironment(collection, environment, options) {
     return __awaiter(this, void 0, void 0, function () {
         var newmanOptions;
@@ -55,6 +56,8 @@ function runNewmanWithEnvironment(collection, environment, options) {
                     htmlextra: {
                         browserTitle: "Superman reports",
                         title: "Superman reports",
+                        displayProgressBar: true,
+                        export: "reports/report.html",
                     },
                 },
                 globals: options === null || options === void 0 ? void 0 : options.globals,
@@ -85,6 +88,8 @@ function runNewman(collection, options) {
                     htmlextra: {
                         browserTitle: "Superman reports",
                         title: "Superman reports",
+                        displayProgressBar: true,
+                        export: "reports/report.html",
                     },
                 },
                 globals: options === null || options === void 0 ? void 0 : options.globals,
@@ -107,24 +112,41 @@ exports.runNewman = runNewman;
 function buildConfig(_a) {
     var file = _a.file, url = _a.url;
     return __awaiter(this, void 0, void 0, function () {
-        var configFile, _b, data, status;
+        var configFile, requestUrl, _b, data, status, error_1;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
                     if (!file) return [3 /*break*/, 1];
-                    configFile = (file === null || file === void 0 ? void 0 : file.endsWith(".json")) ? file : file + ".json";
-                    return [2 /*return*/, JSON.parse(fs_1.default.readFileSync(configFile, "utf8"))];
+                    try {
+                        configFile = (file === null || file === void 0 ? void 0 : file.endsWith(".json")) ? file : file + ".json";
+                        return [2 /*return*/, JSON.parse(fs_1.default.readFileSync(configFile, "utf8"))];
+                    }
+                    catch (error) {
+                        throw error;
+                    }
+                    return [3 /*break*/, 7];
                 case 1:
-                    if (!url) return [3 /*break*/, 3];
-                    console.log();
-                    return [4 /*yield*/, axios_1.default.get(url)];
+                    if (!url) return [3 /*break*/, 6];
+                    requestUrl = url.startsWith("http://") || url.startsWith("https://")
+                        ? url
+                        : "http://".concat(url);
+                    console.log("url:", chalk_1.default.blue(requestUrl));
+                    _c.label = 2;
                 case 2:
+                    _c.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, axios_1.default.get(requestUrl)];
+                case 3:
                     _b = _c.sent(), data = _b.data, status = _b.status;
                     if (status !== 200) {
                         throw new Error(data);
                     }
                     return [2 /*return*/, data];
-                case 3: throw new Error("File or url config is required");
+                case 4:
+                    error_1 = _c.sent();
+                    throw error_1;
+                case 5: return [3 /*break*/, 7];
+                case 6: throw new Error("File or url config is required");
+                case 7: return [2 /*return*/];
             }
         });
     });

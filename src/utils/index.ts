@@ -1,13 +1,9 @@
-import chalk from 'chalk';
-import fs from "fs";
-import { NewmanOptions, SupermanInput } from "../models";
-import newman, {
-  NewmanRunExecution,
-  NewmanRunOptions,
-  NewmanRunSummary,
-} from "newman";
-
 import axios from "axios";
+import chalk from "chalk";
+import fs from "fs";
+import newman, { NewmanRunExecution, NewmanRunOptions, NewmanRunSummary } from "newman";
+
+import { NewmanOptions, SupermanInput } from "../models";
 
 export async function runNewmanWithEnvironment(
   collection: string,
@@ -22,6 +18,8 @@ export async function runNewmanWithEnvironment(
       htmlextra: {
         browserTitle: "Superman reports",
         title: "Superman reports",
+        displayProgressBar: true,
+        export: "reports/report.html",
       },
     },
     globals: options?.globals,
@@ -53,6 +51,8 @@ export async function runNewman(
       htmlextra: {
         browserTitle: "Superman reports",
         title: "Superman reports",
+        displayProgressBar: true,
+        export: "reports/report.html",
       },
     },
     globals: options?.globals,
@@ -78,19 +78,29 @@ export async function buildConfig({
   url,
 }: NewmanOptions): Promise<SupermanInput[]> {
   if (file) {
-    const configFile = file?.endsWith(".json") ? file : file + ".json";
+    try {
+      const configFile = file?.endsWith(".json") ? file : file + ".json";
 
-    return JSON.parse(fs.readFileSync(configFile, "utf8")) as SupermanInput[];
-
-  } else if (url) {
-    const requestUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `http://${url}`
-    console.log("url:", chalk.blue(requestUrl))
-    const { data, status } = await axios.get(requestUrl);
-
-    if (status !== 200) {
-      throw new Error(data as string);
+      return JSON.parse(fs.readFileSync(configFile, "utf8")) as SupermanInput[];
+    } catch (error) {
+      throw error;
     }
+  } else if (url) {
+    const requestUrl =
+      url.startsWith("http://") || url.startsWith("https://")
+        ? url
+        : `http://${url}`;
+    console.log("url:", chalk.blue(requestUrl));
+    try {
+      const { data, status } = await axios.get(requestUrl);
 
-    return data;
+      if (status !== 200) {
+        throw new Error(data as string);
+      }
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
   } else throw new Error("File or url config is required");
 }

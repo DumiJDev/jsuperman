@@ -1,5 +1,28 @@
 #!/usr/bin/env node
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,36 +63,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var args_1 = __importDefault(require("./utils/args"));
-var reporters_1 = __importDefault(require("./utils/reporters"));
-var font_1 = require("./utils/font");
-var utils_1 = require("./utils");
 var chalk_1 = __importDefault(require("chalk"));
+var node_cron_1 = require("node-cron");
+var utils_1 = require("./utils");
+var args_1 = __importDefault(require("./utils/args"));
+var font_1 = require("./utils/font");
+var reporters_1 = __importStar(require("./utils/reporters"));
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var config, items, error_1;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    console.log(chalk_1.default.blue((0, font_1.beautify)("JSuperman")));
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 4, , 5]);
-                    return [4 /*yield*/, (0, utils_1.buildConfig)(args_1.default)];
-                case 2:
-                    config = _a.sent();
-                    return [4 /*yield*/, (0, reporters_1.default)(config, args_1.default)];
-                case 3:
-                    items = _a.sent();
-                    console.log("Processed:", items);
-                    return [3 /*break*/, 5];
-                case 4:
-                    error_1 = _a.sent();
-                    console.log("Occurred unexpected error:", chalk_1.default.red(error_1.message));
-                    process.exit(0);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+            console.log(chalk_1.default.blue((0, font_1.beautify)("JSuperman")));
+            try {
+                if (args_1.default.cron) {
+                    console.log("Scheduled:", chalk_1.default.blue(args_1.default.cron));
+                    (0, node_cron_1.schedule)(args_1.default.cron && (0, node_cron_1.validate)(args_1.default.cron.replace('"', ""))
+                        ? args_1.default.cron.replace('"', "")
+                        : "0 0 */2 * * *", function () {
+                        (0, utils_1.buildConfig)(args_1.default).then(function (config) {
+                            (0, reporters_1.stopsAllureServer)();
+                            (0, reporters_1.default)(config, args_1.default).then(function (items) {
+                                console.log("Processed:", items);
+                            });
+                        });
+                    });
+                }
+                else {
+                    (0, utils_1.buildConfig)(args_1.default).then(function (config) {
+                        (0, reporters_1.default)(config, args_1.default).then(function (items) {
+                            console.log("Processed:", items);
+                        });
+                    });
+                }
             }
+            catch (error) {
+                console.log("Occurred unexpected error:", chalk_1.default.red(error.message));
+                process.exit(0);
+            }
+            return [2 /*return*/];
         });
     });
 }

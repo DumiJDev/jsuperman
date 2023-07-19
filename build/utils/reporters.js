@@ -39,14 +39,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.stopsAllureServer = void 0;
 var allure_commandline_1 = __importDefault(require("allure-commandline"));
 var fs_1 = __importDefault(require("fs"));
 var fs_extra_1 = __importDefault(require("fs-extra"));
+var tree_kill_1 = __importDefault(require("tree-kill"));
 var _1 = require("./");
-function starsAllureServer(port) {
-    var gen = (0, allure_commandline_1.default)(["serve", "allure-results", "-p", port ? port : "4444"]);
-    console.log(gen);
+var gen = null;
+function startsAllureServer(_a) {
+    var port = _a.port, quiet = _a.quiet;
+    var commands = [];
+    if (quiet)
+        commands.push("-q");
+    commands.push.apply(commands, ["serve", "allure-results", "-p", port ? port : "1999"]);
+    return (0, allure_commandline_1.default)(commands);
 }
+function stopsAllureServer() {
+    if (gen) {
+        if (gen.pid) {
+            (0, tree_kill_1.default)(gen.pid, "SIGINT");
+            gen = null;
+        }
+    }
+}
+exports.stopsAllureServer = stopsAllureServer;
 function runNewmanWithReporters(list, options) {
     return __awaiter(this, void 0, void 0, function () {
         var results, _i, list_1, item, executions, executions;
@@ -82,7 +98,7 @@ function runNewmanWithReporters(list, options) {
                     return [3 /*break*/, 1];
                 case 8:
                     fs_1.default.writeFileSync("./newman-report.json", JSON.stringify(results, null, 2));
-                    starsAllureServer(options === null || options === void 0 ? void 0 : options.port);
+                    gen = startsAllureServer(options);
                     return [2 /*return*/, Promise.resolve(results.length)];
             }
         });
