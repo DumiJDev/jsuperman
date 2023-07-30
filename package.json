@@ -1,6 +1,6 @@
 {
   "name": "jsuperman",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A library to run many collections with newman",
   "main": "build/main.js",
   "repository": "https://github.com/DumiJDev/jsuperman.git",
