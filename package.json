@@ -17,11 +17,9 @@
     "clark": "./bin/jsuperman"
   },
   "dependencies": {
-    "@danvargas46/newman-reporter-allure": "^1.0.7",
     "allure-commandline": "^2.23.0",
     "axios": "^1.4.0",
     "chalk": "4.1.2",
-    "collsuite": "^1.0.7",
     "ejs": "^3.1.9",
     "figlet": "^1.6.0",
     "fs-extra": "^11.1.1",
@@ -47,10 +45,12 @@
     "typescript": "^5.1.6"
   },
   "keywords": [
-    "htmlextra",
     "newman",
     "newman-run",
     "cli",
-    "postman"
+    "postman",
+    "testing",
+    "observability",
+    "allure"
   ]
 }

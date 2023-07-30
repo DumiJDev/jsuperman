@@ -9,14 +9,6 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@danvargas46/newman-reporter-allure@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.npmjs.org/@danvargas46/newman-reporter-allure/-/newman-reporter-allure-1.0.7.tgz"
-  integrity sha512-A0MsApqBuGjdh8KEDCYvte9F3o+p9pa6/25tERmgCPpkZ2ll7YPweM24DAxTGwos6b6CeQZSKLvg1ZMT1f/wlw==
-  dependencies:
-    allure-js-commons "^2.0.0-beta.6"
-    lodash "^4.17.15"
-
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.npmjs.org/@isaacs/cliui/-/cliui-8.0.2.tgz"
@@ -187,7 +179,7 @@ allure-commandline@^2.23.0:
   resolved "https://registry.npmjs.org/allure-commandline/-/allure-commandline-2.23.0.tgz"
   integrity sha512-bfAbyQzke0Gj48bxIAhHOcJ6DluYeR4uz3iQ1wJWx7TgGA1gazN1PXUtpr+wnX9eXCTRApEuggaJIduLik7Wsg==
 
-allure-js-commons@2.4.0, allure-js-commons@^2.0.0-beta.6:
+allure-js-commons@2.4.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/allure-js-commons/-/allure-js-commons-2.4.0.tgz"
   integrity sha512-mIQKAA91ihtMPzHJh7fQib/8MhZaUQ0oYtqFzS//5/Q+ILbMWW3WD2ISWtwniFAF2XWdRFjZ013IfUuKusbh1g==
@@ -399,14 +391,6 @@ cliui@^8.0.1:
     string-width "^4.2.0"
     strip-ansi "^6.0.1"
     wrap-ansi "^7.0.0"
-
-collsuite@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.npmjs.org/collsuite/-/collsuite-1.0.7.tgz"
-  integrity sha512-MLMnN/Wk+tq/8yAluOnsvGpD4Xlr5zwogsoXDa27ZWFdzXZ1rxV6jfmz0E1p5lUS8jBswbL56zW0lGfJfFmExg==
-  dependencies:
-    allure-js-commons "^2.0.0-beta.6"
-    lodash "^4.17.15"
 
 color-convert@^2.0.1:
   version "2.0.1"
@@ -871,7 +855,7 @@ liquid-json@0.3.1:
   resolved "https://registry.npmjs.org/liquid-json/-/liquid-json-0.3.1.tgz"
   integrity sha512-wUayTU8MS827Dam6MxgD72Ui+KOSF+u/eIqpatOtjnvgJ0+mnDq33uC2M7J0tPK+upe/DpUAuK4JUU89iBoNKQ==
 
-lodash@4.17.21, lodash@^4.17.15:
+lodash@4.17.21:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
