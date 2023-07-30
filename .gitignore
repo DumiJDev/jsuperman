@@ -8,3 +8,6 @@ test.json
 newman-report.json
 environment
 feed.json
+results.json
+input.json
+lab.json

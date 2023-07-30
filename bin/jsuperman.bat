@@ -1,1 +1,1 @@
-node ./build/index %*
+node ./build/main %*
