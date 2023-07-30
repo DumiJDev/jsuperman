@@ -2,7 +2,7 @@
   "name": "jsuperman",
   "version": "1.0.5",
   "description": "A library to run many collections with newman",
-  "main": "build/index.js",
+  "main": "build/main.js",
   "repository": "https://github.com/DumiJDev/jsuperman.git",
   "author": "DumiJDev",
   "license": "MIT",
@@ -10,23 +10,27 @@
   "scripts": {
     "dev": "npx nodemon",
     "build": "rimraf ./build && tsc",
-    "start": "node build/index"
+    "start": "node build/main"
   },
   "bin": {
     "jsuperman": "./bin/jsuperman",
     "clark": "./bin/jsuperman"
   },
   "dependencies": {
+    "@danvargas46/newman-reporter-allure": "^1.0.7",
     "allure-commandline": "^2.23.0",
     "axios": "^1.4.0",
     "chalk": "4.1.2",
+    "collsuite": "^1.0.7",
+    "ejs": "^3.1.9",
     "figlet": "^1.6.0",
     "fs-extra": "^11.1.1",
     "newman": "^5.3.2",
     "newman-reporter-allure": "^2.4.0",
-    "newman-reporter-htmlextra": "^1.22.11",
     "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.4",
     "tree-kill": "^1.2.2",
+    "yaml": "^2.3.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -35,6 +39,7 @@
     "@types/newman": "^5.3.3",
     "@types/node": "^20.3.3",
     "@types/node-cron": "^3.0.8",
+    "@types/nodemailer": "^6.4.9",
     "@types/yargs": "^17.0.24",
     "nodemon": "^2.0.22",
     "rimraf": "^5.0.1",

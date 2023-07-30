@@ -1,3 +1,5 @@
+import { NewmanRunExecution } from "newman";
+
 export type SupermanInput = {
   collection: string;
   environment: string | undefined;
@@ -9,13 +11,28 @@ export type NewmanOptions = {
   port: string | undefined;
   globals: string | undefined;
   url: string | undefined;
-  serve: boolean;
+  serve: string;
   report: string | undefined;
   export: string | undefined;
   quiet: boolean;
-  cron: string | undefined
+  cron: string | undefined;
+  native: boolean;
+  email: string | undefined;
 };
+export type SmtpConfig = {
+  host: string
+  port: number
+  secure: false
+  auth: {
+    user: string | undefined
+    pass: string | undefined
+  }
+}
 
+export type ReportOptions = {
+  executions: Array<NewmanRunExecution>;
+  url: string;
+}
 export type Environment = {
   id: string;
   name: string;
