@@ -17,22 +17,25 @@ export type NewmanOptions = {
   quiet: boolean;
   cron: string | undefined;
   native: boolean;
-  email: string | undefined;
+  emails: Array<string> | undefined;
+  "email-config": string | undefined;
+  "email-content": string | undefined;
+  "email-subject": string | undefined;
 };
 export type SmtpConfig = {
-  host: string
-  port: number
-  secure: false
+  host: string;
+  port: number;
+  secure: false;
   auth: {
-    user: string | undefined
-    pass: string | undefined
-  }
-}
+    user: string | undefined;
+    pass: string | undefined;
+  };
+};
 
 export type ReportOptions = {
   executions: Array<NewmanRunExecution>;
   url: string;
-}
+};
 export type Environment = {
   id: string;
   name: string;
@@ -44,4 +47,19 @@ type EnvironmentValue = {
   value: string;
   type: string;
   enabled: boolean;
+};
+
+export enum MessageType {
+  HTML = "HTML",
+  TEXT = "TEXT",
+}
+
+export type Message = {
+  content: string;
+  messageType: MessageType;
+};
+
+export type Address = {
+  email: string;
+  name?: string;
 };

@@ -13,7 +13,7 @@ import JAllureServerService from "./domain/services/jallure-service";
 import JAllureServerServiceImpl from "./adapters/inbound/jallure-service-impl";
 import JSupermanServiceImpl from "./adapters/inbound/jsuperman-service-impl";
 import JReportServiceImpl from "./adapters/outbound/jreport-service-impl";
-import JMailServiceImpl from "./adapters/outbound/jmail-service-impl";
+import JMailServiceImpl from "./adapters/outbound/jemail-service-impl";
 
 class JSupermanApp {
   constructor(
