@@ -1,36 +1,21 @@
-import {
-  readFileSync,
-  pathExistsSync,
-  removeSync,
-  writeFileSync,
-} from "fs-extra";
-import newman, {
-  NewmanRunExecution,
-  NewmanRunOptions,
-  NewmanRunSummary,
-} from "newman";
-import { createTransport } from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { parse } from "yargs";
-import {
-  SupermanInput,
-  NewmanOptions,
-  SmtpConfig,
-} from "../../domain/entities";
-import JSupermanService from "../../domain/services/jsuperman-service";
-import AllureProcess from "../../domain/entities/allure-process";
-import JReportService from "../../domain/services/jreport-service";
+import ejs from "ejs";
+import { pathExistsSync, readFileSync, removeSync, writeFileSync } from "fs-extra";
+import newman, { NewmanRunExecution, NewmanRunOptions, NewmanRunSummary } from "newman";
+
+import { MessageType, NewmanOptions, SupermanInput } from "../../domain/entities";
+import JEmailModel from "../../domain/entities/jemail-model";
 import JAllureServerService from "../../domain/services/jallure-service";
-import JMailService from "../../domain/services/mail-service";
+import JMailService from "../../domain/services/jemail-service";
+import JReportService from "../../domain/services/jreport-service";
+import JSupermanService from "../../domain/services/jsuperman-service";
 
 export default class JSupermanServiceImpl implements JSupermanService {
   constructor(
     private readonly jReportService: JReportService,
     private readonly jAllureService: JAllureServerService,
-    private readonly jMailService: JMailService
   ) {}
 
-  async run(list: SupermanInput[], options: NewmanOptions): Promise<number> {
+  async run(list: SupermanInput[], options: NewmanOptions): Promise<Array<NewmanRunExecution>> {
     const results: NewmanRunExecution[] = [];
 
     if (pathExistsSync("allure-results")) removeSync("allure-results");
@@ -65,11 +50,7 @@ export default class JSupermanServiceImpl implements JSupermanService {
         url: options.report,
       });
 
-    if (options.email) {
-      this.jMailService.sendMail();
-    }
-
-    return Promise.resolve(results.length);
+    return Promise.resolve(results);
   }
 
   private async runNewman(

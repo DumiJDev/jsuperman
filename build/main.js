@@ -42,14 +42,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var chalk_1 = __importDefault(require("chalk"));
 var node_cron_1 = require("node-cron");
-var version_1 = __importDefault(require("./configs/version"));
+var jallure_service_impl_1 = __importDefault(require("./adapters/inbound/jallure-service-impl"));
+var jfont_service_impl_1 = __importDefault(require("./adapters/inbound/jfont-service-impl"));
+var jsuperman_service_impl_1 = __importDefault(require("./adapters/inbound/jsuperman-service-impl"));
+var jemail_service_impl_1 = __importDefault(require("./adapters/outbound/jemail-service-impl"));
+var jreport_service_impl_1 = __importDefault(require("./adapters/outbound/jreport-service-impl"));
 var args_1 = __importDefault(require("./configs/args"));
 var jsuperman_config_1 = __importDefault(require("./configs/jsuperman-config"));
-var jfont_service_impl_1 = __importDefault(require("./adapters/inbound/jfont-service-impl"));
-var jallure_service_impl_1 = __importDefault(require("./adapters/inbound/jallure-service-impl"));
-var jsuperman_service_impl_1 = __importDefault(require("./adapters/inbound/jsuperman-service-impl"));
-var jreport_service_impl_1 = __importDefault(require("./adapters/outbound/jreport-service-impl"));
-var jmail_service_impl_1 = __importDefault(require("./adapters/outbound/jmail-service-impl"));
+var version_1 = __importDefault(require("./configs/version"));
+var jemail_model_1 = __importDefault(require("./domain/entities/jemail-model"));
 var JSupermanApp = /** @class */ (function () {
     function JSupermanApp(title, args, jSupermanService, jConfigs, jFontService, jAllureService) {
         this.title = title;
@@ -65,7 +66,7 @@ var JSupermanApp = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 console.log(chalk_1.default.blue(this.jFontService.design(this.title)));
-                console.log(chalk_1.default.bgBlue.white(version_1.default), '\n\n');
+                console.log(chalk_1.default.bgBlue.white('\t\t\t\t\t\t[' + version_1.default + ']'), "\n\n");
                 cron = this.args.getArgs().cron;
                 try {
                     if (cron) {
@@ -90,26 +91,34 @@ var JSupermanApp = /** @class */ (function () {
     };
     JSupermanApp.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var config, items, error_1;
+            var config, executions, emailConfig, emailService, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, this.jConfigs.buildConfig(this.args.getArgs())];
                     case 1:
                         config = _a.sent();
                         this.jAllureService.stopsAllureServer();
                         return [4 /*yield*/, this.jSupermanService.run(config, this.args.getArgs())];
                     case 2:
-                        items = _a.sent();
-                        console.log("Processed:", chalk_1.default.blue(items));
-                        return [3 /*break*/, 4];
+                        executions = _a.sent();
+                        emailConfig = this.args.getArgs()["email-config"];
+                        if (!emailConfig) return [3 /*break*/, 4];
+                        emailService = jemail_service_impl_1.default.getInstance(emailConfig);
+                        return [4 /*yield*/, emailService.sendMail(jemail_model_1.default.fromConfig(emailConfig, executions))];
                     case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        console.log("Processed:", chalk_1.default.blue(executions.length));
+                        return [3 /*break*/, 6];
+                    case 5:
                         error_1 = _a.sent();
                         console.log("Occurred unexpected error:", chalk_1.default.red(error_1.message));
                         process.exit(0);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -118,5 +127,6 @@ var JSupermanApp = /** @class */ (function () {
 }());
 var title = "JSuperman";
 var allureService = new jallure_service_impl_1.default();
-var app = new JSupermanApp(title, new args_1.default(), new jsuperman_service_impl_1.default(new jreport_service_impl_1.default(), allureService, new jmail_service_impl_1.default()), new jsuperman_config_1.default(), new jfont_service_impl_1.default(), allureService);
+var args = new args_1.default();
+var app = new JSupermanApp(title, args, new jsuperman_service_impl_1.default(new jreport_service_impl_1.default(), allureService), new jsuperman_config_1.default(), new jfont_service_impl_1.default(), allureService);
 app.run();

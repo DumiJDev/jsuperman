@@ -39,68 +39,69 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = __importDefault(require("axios"));
 var chalk_1 = __importDefault(require("chalk"));
-var fs_1 = __importDefault(require("fs"));
-var yaml_1 = __importDefault(require("yaml"));
-var JSupermanConfig = /** @class */ (function () {
-    function JSupermanConfig() {
+var nodemailer_1 = require("nodemailer");
+var JMailServiceImpl = /** @class */ (function () {
+    function JMailServiceImpl(_a) {
+        var from = _a.from, smtp = _a.smtp;
+        var conObj = {};
+        conObj.host = smtp.host;
+        conObj.port = smtp.port;
+        conObj.secure = smtp.secure;
+        if (smtp.auth) {
+            conObj.auth = { pass: smtp.auth.pass, user: smtp.auth.user };
+        }
+        this.transport = (0, nodemailer_1.createTransport)(conObj);
+        this.from = from;
     }
-    JSupermanConfig.prototype.buildConfig = function (options) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                if (options.file)
-                    return [2 /*return*/, options.file.endsWith(".yml") || options.file.endsWith(".yaml")
-                            ? this.buildFromYAML(options.file)
-                            : this.buildFromJSON(options.file)];
-                else if (options.url)
-                    return [2 /*return*/, this.buildFromUrl(options.url)];
-                else
-                    throw new Error("File or url is required to build configs");
-                return [2 /*return*/];
-            });
-        });
+    JMailServiceImpl.getInstance = function (config) {
+        if (this.instance === null) {
+            this.instance = new JMailServiceImpl(config);
+        }
+        return this.instance;
     };
-    JSupermanConfig.prototype.buildFromJSON = function (file) {
+    JMailServiceImpl.prototype.sendMail = function (emailModel) {
         return __awaiter(this, void 0, void 0, function () {
-            var configFile, configFileText;
+            var options, a;
             return __generator(this, function (_a) {
-                configFile = file.endsWith(".json") ? file : file + ".json";
-                configFileText = fs_1.default.readFileSync(configFile, "utf8");
-                return [2 /*return*/, JSON.parse(configFileText)];
-            });
-        });
-    };
-    JSupermanConfig.prototype.buildFromYAML = function (file) {
-        return __awaiter(this, void 0, void 0, function () {
-            var configFileText;
-            return __generator(this, function (_a) {
-                configFileText = fs_1.default.readFileSync(file, "utf8");
-                return [2 /*return*/, yaml_1.default.parse(configFileText)];
-            });
-        });
-    };
-    JSupermanConfig.prototype.buildFromUrl = function (url) {
-        return __awaiter(this, void 0, void 0, function () {
-            var requestUrl, _a, data, status;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+                switch (_a.label) {
                     case 0:
-                        requestUrl = url.startsWith("http://") || url.startsWith("https://")
-                            ? url
-                            : "http://".concat(url);
-                        console.log("url:", chalk_1.default.blue(requestUrl));
-                        return [4 /*yield*/, axios_1.default.get(requestUrl)];
+                        options = this.buildMessageOptions(emailModel);
+                        return [4 /*yield*/, this.transport.sendMail(options)];
                     case 1:
-                        _a = _b.sent(), data = _a.data, status = _a.status;
-                        if (status !== 200) {
-                            throw new Error(JSON.stringify(data));
+                        a = _a.sent();
+                        if (a.accepted.length) {
+                            console.log(chalk_1.default.green("Accepted:"));
+                            a.accepted.forEach(function (acc) {
+                                return console.log("-", chalk_1.default.green(acc.toString()));
+                            });
                         }
-                        return [2 /*return*/, data];
+                        if (a.pending) {
+                            console.log(chalk_1.default.yellow("\nPending:"));
+                            a.pending.forEach(function (acc) { return console.log("-", chalk_1.default.yellow(acc.toString())); });
+                        }
+                        if (a.rejected.length) {
+                            console.log(chalk_1.default.red("\nRejected:"));
+                            a.rejected.forEach(function (acc) { return console.log("-", chalk_1.default.red(acc.toString())); });
+                        }
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    return JSupermanConfig;
+    JMailServiceImpl.prototype.buildSenderOptions = function () { };
+    JMailServiceImpl.prototype.buildMessageOptions = function (emailModel) {
+        var message = {};
+        message.from = "\"".concat(this.from.name, "\" ").concat(this.from.email);
+        message.to = emailModel.to;
+        if (emailModel.htmlMessage)
+            message.html = emailModel.htmlMessage;
+        else if (emailModel.simpleMessage)
+            message.text = emailModel.simpleMessage;
+        message.subject = emailModel.subject;
+        return message;
+    };
+    JMailServiceImpl.instance = null;
+    return JMailServiceImpl;
 }());
-exports.default = JSupermanConfig;
+exports.default = JMailServiceImpl;
