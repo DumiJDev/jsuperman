@@ -13,10 +13,9 @@ export default class JSupermanServiceImpl implements JSupermanService {
   constructor(
     private readonly jReportService: JReportService,
     private readonly jAllureService: JAllureServerService,
-    private readonly jMailService: JMailService
   ) {}
 
-  async run(list: SupermanInput[], options: NewmanOptions): Promise<number> {
+  async run(list: SupermanInput[], options: NewmanOptions): Promise<Array<NewmanRunExecution>> {
     const results: NewmanRunExecution[] = [];
 
     if (pathExistsSync("allure-results")) removeSync("allure-results");
@@ -51,30 +50,7 @@ export default class JSupermanServiceImpl implements JSupermanService {
         url: options.report,
       });
 
-    if (options.emails) {
-      this.jMailService.sendMail(
-        new JEmailModel(
-          options.emails.map((email) => ({ email })),
-          options["email-subject"]!,
-          {
-            messageType: options["email-content"]?.endsWith(".ejs")
-              ? MessageType.HTML
-              : MessageType.TEXT,
-            content: this.buildEmailContent(options["email-content"]!, results),
-          }
-        )
-      );
-    }
-
-    return Promise.resolve(results.length);
-  }
-
-  private buildEmailContent(content: string, data?: newman.NewmanRunExecution[]) {
-    if (!content.endsWith(".ejs")) return content;
-
-    let template = readFileSync(content, { encoding: "utf8" });
-
-    return ejs.render(template, {extensions: data});
+    return Promise.resolve(results);
   }
 
   private async runNewman(

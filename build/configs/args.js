@@ -3,37 +3,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var fs_extra_1 = require("fs-extra");
 var yargs_1 = __importDefault(require("yargs"));
 var ArgumentParser = /** @class */ (function () {
     function ArgumentParser() {
         this.argv = yargs_1.default
             .option("globals", {
             alias: "g",
-            describe: "Define global variables to be used during the test execution.",
+            describe: "Set global variables for the test execution.",
             type: "string",
         })
             .option("port", {
             alias: "p",
-            describe: "Specify the port where the generated report will be accessed.",
+            describe: "Specify the port for accessing the generated report.",
             type: "string",
         })
             .option("iteration", {
             alias: "i",
-            describe: "Set the number of iterations for test execution. Default is 1.",
+            describe: "Number of test execution iterations (default is 1).",
             type: "number",
             default: 1,
         })
             .option("url", {
             alias: "u",
-            describe: "URL to access collections and environments for the test.",
+            describe: "URL to access test collections and environments.",
             type: "string",
         })
             .option("serve", {
             alias: "s",
-            describe: "Run the server after generating the report for easy access.",
+            describe: "Run a server after generating the report for easy access.",
             type: "string",
             coerce: function (arg) {
-                return arg === '' ? "allure" : arg;
+                return arg === "" ? "allure" : arg;
             },
         })
             .option("native", {
@@ -44,12 +45,12 @@ var ArgumentParser = /** @class */ (function () {
         })
             .option("report", {
             alias: "r",
-            describe: "URL where to send the report results after test execution.",
+            describe: "URL to send the report results after test execution.",
             type: "string",
         })
             .option("export", {
             alias: "e",
-            describe: "Specify the path to export the test results as JSON.",
+            describe: "Export test results to a JSON file at the specified path.",
             type: "string",
         })
             .option("quiet", {
@@ -60,17 +61,25 @@ var ArgumentParser = /** @class */ (function () {
         })
             .option("cron", {
             alias: "c",
-            describe: "Schedule jsuperman to run on a specified time using cron expression.",
+            describe: "Schedule jsuperman to run using a cron expression.",
             type: "string",
         })
-            .option("email", {
+            .option("email-config", {
             alias: "e",
-            describe: "",
-            type: "string"
+            describe: "SMTP configuration in key:value format separated by semicolons.",
+            type: "string",
+            coerce: function (arg) {
+                if (!arg) {
+                    return null;
+                }
+                return JSON.parse((0, fs_extra_1.readFileSync)(arg.endsWith(".json") ? arg : arg + ".json", {
+                    encoding: "utf8",
+                }));
+            },
         })
             .option("file", {
             alias: "f",
-            describe: "Path to the file containing all collections and environments.",
+            describe: "Path to a file containing collections and environments.",
             type: "string",
         }).argv;
     }

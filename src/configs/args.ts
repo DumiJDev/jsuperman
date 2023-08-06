@@ -1,6 +1,7 @@
+import { readFileSync } from "fs-extra";
 import yargs from "yargs";
 
-import { NewmanOptions } from "../domain/entities";
+import { EmailConfig, NewmanOptions } from "../domain/entities";
 
 export default class ArgumentParser {
   private argv: NewmanOptions;
@@ -63,35 +64,28 @@ export default class ArgumentParser {
         describe: "Schedule jsuperman to run using a cron expression.",
         type: "string",
       })
-      .option("emails", {
-        alias: "m",
-        describe: "List of email addresses separated by semicolons.",
+      .option("email-config", {
+        alias: "e",
+        describe:
+          "SMTP configuration in key:value format separated by semicolons.",
         type: "string",
         coerce(arg) {
-          return arg.split(";");
+          if (!arg) {
+            return null;
+          }
+
+          return JSON.parse(
+            readFileSync(arg.endsWith(".json") ? arg : arg + ".json", {
+              encoding: "utf8",
+            })
+          ) as EmailConfig;
         },
-      })
-      .option("email-config", {
-        alias: "smtp",
-        describe: "SMTP configuration in key:value format separated by semicolons.",
-        type: "string",
-      })
-      .option("email-content", {
-        alias: "content",
-        describe: "Path to the email content in HTML format or as a simple string.",
-        type: "string",
-      })
-      .option("email-subject", {
-        alias: "sub",
-        describe: "Email subject.",
-        type: "string",
       })
       .option("file", {
         alias: "f",
         describe: "Path to a file containing collections and environments.",
         type: "string",
-      })
-      .argv as NewmanOptions;
+      }).argv as NewmanOptions;
   }
 
   public getArgs(): NewmanOptions {

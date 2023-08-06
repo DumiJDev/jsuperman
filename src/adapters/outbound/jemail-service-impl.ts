@@ -3,43 +3,35 @@ import { createTransport, Transporter } from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
-import { Address } from "../../domain/entities";
+import { Address, EmailConfig } from "../../domain/entities";
 import JEmailModel from "../../domain/entities/jemail-model";
 import JMailService from "../../domain/services/jemail-service";
 
 export default class JMailServiceImpl implements JMailService {
+  static getInstance(config: EmailConfig) {
+    if (this.instance === null) {
+      this.instance = new JMailServiceImpl(config);
+    }
+
+    return this.instance;
+  }
   private readonly transport: Transporter<SMTPTransport.SentMessageInfo>;
   private readonly from: Address;
+  private static instance: JMailService | null = null;
 
-  constructor(connectionStr: string) {
-    const regex = /[a-z]+:[A-Za-z0-9@]+/g;
-    let name: string = '', email: string = ''
-
-    if (!regex.test(connectionStr))
-      throw new Error(
-        "email pattern is wrong, a pattern valid is 'key:value;key1:value'"
-      );
-
+  private constructor({ from, smtp }: EmailConfig) {
     const conObj: SMTPTransport.Options = {};
 
-    connectionStr.split(";").forEach((item) => {
-      const [key, value] = item.split(":");
+    conObj.host = smtp.host;
+    conObj.port = smtp.port;
+    conObj.secure = smtp.secure;
 
-      if (key.toLowerCase() === "host") conObj.host = value;
-      else if (key.toLowerCase() === "port") conObj.port = parseInt(value);
-      else if (key.toLowerCase() === "auth") {
-        const [user, pass] = value.split("@");
-
-        conObj.auth = { user, pass };
-      } else if (key.toLowerCase() === "from") {
-        const [name1, email1] = value.split("@");
-        name = name1
-        email = email1
-      }
-    });
+    if (smtp.auth) {
+      conObj.auth = { pass: smtp.auth.pass, user: smtp.auth.user };
+    }
 
     this.transport = createTransport(conObj);
-    this.from = { name, email };
+    this.from = from;
   }
 
   async sendMail(emailModel: JEmailModel): Promise<void> {
@@ -47,14 +39,22 @@ export default class JMailServiceImpl implements JMailService {
 
     const a = await this.transport.sendMail(options);
 
-    console.log(chalk.green("Accepted:"));
-    a.accepted.forEach((acc) => console.log("-", chalk.green(acc.toString)));
+    if (a.accepted.length) {
+      console.log(chalk.green("Accepted:"));
+      a.accepted.forEach((acc) =>
+        console.log("-", chalk.green(acc.toString()))
+      );
+    }
 
-    console.log(chalk.yellow("\nPending:"));
-    a.pending.forEach((acc) => console.log("-", chalk.yellow(acc.toString)));
+    if (a.pending) {
+      console.log(chalk.yellow("\nPending:"));
+      a.pending.forEach((acc) => console.log("-", chalk.yellow(acc.toString())));
+    }
 
-    console.log(chalk.red("\nRejected:"));
-    a.rejected.forEach((acc) => console.log("-", chalk.red(acc.toString)));
+    if (a.rejected.length) {
+      console.log(chalk.red("\nRejected:"));
+      a.rejected.forEach((acc) => console.log("-", chalk.red(acc.toString())));
+    }
   }
 
   private buildSenderOptions() {}

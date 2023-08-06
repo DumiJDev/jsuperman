@@ -3,17 +3,18 @@
 import chalk from "chalk";
 import { schedule, validate } from "node-cron";
 
-import version from "./configs/version";
-import JFontService from "./domain/services/jfont-service";
+import JAllureServerServiceImpl from "./adapters/inbound/jallure-service-impl";
+import JFontServiceImpl from "./adapters/inbound/jfont-service-impl";
+import JSupermanServiceImpl from "./adapters/inbound/jsuperman-service-impl";
+import JMailServiceImpl from "./adapters/outbound/jemail-service-impl";
+import JReportServiceImpl from "./adapters/outbound/jreport-service-impl";
 import ArgumentParser from "./configs/args";
 import JSupermanConfig from "./configs/jsuperman-config";
-import JFontServiceImpl from "./adapters/inbound/jfont-service-impl";
-import JSupermanService from "./domain/services/jsuperman-service";
+import version from "./configs/version";
+import JEmailModel from "./domain/entities/jemail-model";
 import JAllureServerService from "./domain/services/jallure-service";
-import JAllureServerServiceImpl from "./adapters/inbound/jallure-service-impl";
-import JSupermanServiceImpl from "./adapters/inbound/jsuperman-service-impl";
-import JReportServiceImpl from "./adapters/outbound/jreport-service-impl";
-import JMailServiceImpl from "./adapters/outbound/jemail-service-impl";
+import JFontService from "./domain/services/jfont-service";
+import JSupermanService from "./domain/services/jsuperman-service";
 
 class JSupermanApp {
   constructor(
@@ -27,7 +28,7 @@ class JSupermanApp {
 
   async run() {
     console.log(chalk.blue(this.jFontService.design(this.title)));
-    console.log(chalk.bgBlue.white(version), '\n\n');
+    console.log(chalk.bgBlue.white('\t\t\t\t\t\t[' + version + ']'), "\n\n");
 
     const { cron } = this.args.getArgs();
 
@@ -59,11 +60,22 @@ class JSupermanApp {
     try {
       const config = await this.jConfigs.buildConfig(this.args.getArgs());
       this.jAllureService.stopsAllureServer();
-      const items = await this.jSupermanService.run(
+      const executions = await this.jSupermanService.run(
         config,
         this.args.getArgs()
       );
-      console.log("Processed:", chalk.blue(items));
+
+      const emailConfig = this.args.getArgs()["email-config"]
+
+      if (emailConfig) {
+
+        const emailService = JMailServiceImpl.getInstance(emailConfig)
+
+        await emailService.sendMail(JEmailModel.fromConfig(emailConfig, executions))
+
+      }
+
+      console.log("Processed:", chalk.blue(executions.length));
     } catch (error) {
       console.log(
         "Occurred unexpected error:",
@@ -77,14 +89,13 @@ class JSupermanApp {
 const title = "JSuperman";
 
 const allureService = new JAllureServerServiceImpl();
-
+const args = new ArgumentParser();
 const app = new JSupermanApp(
   title,
-  new ArgumentParser(),
+  args,
   new JSupermanServiceImpl(
     new JReportServiceImpl(),
     allureService,
-    new JMailServiceImpl()
   ),
   new JSupermanConfig(),
   new JFontServiceImpl(),

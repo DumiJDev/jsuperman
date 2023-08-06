@@ -42,10 +42,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs_extra_1 = require("fs-extra");
 var newman_1 = __importDefault(require("newman"));
 var JSupermanServiceImpl = /** @class */ (function () {
-    function JSupermanServiceImpl(jReportService, jAllureService, jMailService) {
+    function JSupermanServiceImpl(jReportService, jAllureService) {
         this.jReportService = jReportService;
         this.jAllureService = jAllureService;
-        this.jMailService = jMailService;
     }
     JSupermanServiceImpl.prototype.run = function (list, options) {
         return __awaiter(this, void 0, void 0, function () {
@@ -93,11 +92,7 @@ var JSupermanServiceImpl = /** @class */ (function () {
                     case 9:
                         _a.sent();
                         _a.label = 10;
-                    case 10:
-                        if (options.email) {
-                            this.jMailService.sendMail();
-                        }
-                        return [2 /*return*/, Promise.resolve(results.length)];
+                    case 10: return [2 /*return*/, Promise.resolve(results)];
                 }
             });
         });
