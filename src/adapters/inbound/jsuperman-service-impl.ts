@@ -1,11 +1,9 @@
-import ejs from "ejs";
-import { pathExistsSync, readFileSync, removeSync, writeFileSync } from "fs-extra";
+
+import { pathExistsSync, removeSync, writeFileSync } from "fs-extra";
 import newman, { NewmanRunExecution, NewmanRunOptions, NewmanRunSummary } from "newman";
 
-import { MessageType, NewmanOptions, SupermanInput } from "../../domain/entities";
-import JEmailModel from "../../domain/entities/jemail-model";
+import { NewmanOptions, OutputResult, SupermanInput } from "../../domain/entities";
 import JAllureServerService from "../../domain/services/jallure-service";
-import JMailService from "../../domain/services/jemail-service";
 import JReportService from "../../domain/services/jreport-service";
 import JSupermanService from "../../domain/services/jsuperman-service";
 
@@ -39,7 +37,7 @@ export default class JSupermanServiceImpl implements JSupermanService {
     }
 
     if (options.export)
-      writeFileSync("./results.json", JSON.stringify(results, null, 2));
+      writeFileSync(OutputResult.Path, JSON.stringify(results, null, 2));
 
     if (options.serve === "allure")
       this.jAllureService.startsAllureServer(options);

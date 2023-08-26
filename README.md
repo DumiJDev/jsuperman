@@ -80,6 +80,12 @@ structure:
     </pre>
 </code>
 
+<h3>Results endpoint</h3>
+
+<p>Result newman executions</p>
+
+<code>GET http://hostname:7777/jsuperman/results</code>
+
 <h2>💻 Built with</h2>
 
 Technologies used in the project:

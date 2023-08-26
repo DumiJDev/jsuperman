@@ -13,20 +13,23 @@ export type NewmanOptions = {
   url: string | undefined;
   serve: string;
   report: string | undefined;
-  export: string | undefined;
+  export: boolean;
   quiet: boolean;
   cron: string | undefined;
   native: boolean;
   "email-config": EmailConfig | null;
+  rest: boolean;
 };
 export type SmtpConfig = {
   host: string;
   port: number;
   secure: false;
-  auth: {
-    user: string | undefined;
-    pass: string | undefined;
-  } | undefined;
+  auth:
+    | {
+        user: string | undefined;
+        pass: string | undefined;
+      }
+    | undefined;
 };
 
 export type ReportOptions = {
@@ -66,6 +69,10 @@ export type EmailConfig = {
   template: string | undefined;
   content: string | undefined;
   subject: string | undefined;
-  to: Array<string>
-  from: Address
+  to: Array<string>;
+  from: Address;
+};
+
+export enum OutputResult {
+  Path = "./results.json",
 }

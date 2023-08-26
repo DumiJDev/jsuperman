@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "fs";
 
-let version = "1.0.7";
+let version = "1.0.8";
 
 if (existsSync("../../package.json")) {
   const packageString = readFileSync("../../package.json", {
