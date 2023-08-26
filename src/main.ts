@@ -15,26 +15,45 @@ import JEmailModel from "./domain/entities/jemail-model";
 import JAllureServerService from "./domain/services/jallure-service";
 import JFontService from "./domain/services/jfont-service";
 import JSupermanService from "./domain/services/jsuperman-service";
+import express from "express";
+import JRestService from "./domain/services/rest-service";
+import JRestServiceImpl from "./adapters/inbound/rest-service-impl";
 
 class JSupermanApp {
   constructor(
     private readonly title: string,
     private readonly args: ArgumentParser,
-    private readonly jSupermanService: JSupermanService,
-    private readonly jConfigs: JSupermanConfig,
-    private readonly jFontService: JFontService,
-    private readonly jAllureService: JAllureServerService
+    private readonly jss: JSupermanService,
+    private readonly jc: JSupermanConfig,
+    private readonly jfs: JFontService,
+    private readonly jas: JAllureServerService,
+    private readonly jrs: JRestService
   ) {}
 
   async run() {
-    console.log(chalk.blue(this.jFontService.design(this.title)));
-    console.log(chalk.bgBlue.white('\t\t\t\t\t\t[' + version + ']'), "\n\n");
+    console.log(chalk.blue(this.jfs.design(this.title)));
+    console.log(chalk.bold.bgBlue.white("\t\t\t\t\t\t[" + version + "]"), "\n\n");
 
     const { cron } = this.args.getArgs();
 
     try {
+      if (this.args.getArgs().rest) {
+        const app = express();
+
+        app.use(express.json());
+        app.use(express.urlencoded({ limit: "10mb", extended: true }));
+
+        app.get("/jsuperman/results", (req, res) => {
+          res.send(this.jrs.getResults());
+        });
+
+        app.listen(7777, () =>
+          console.log("Listen in port", chalk.bgYellow.bold.white(7777))
+        );
+      }
+
       if (cron) {
-        console.log("Scheduled:", chalk.blue(cron));
+        console.log("Scheduled:", chalk.bgBlue.bold.white(cron));
 
         schedule(
           validate(cron.replace('"', ""))
@@ -58,21 +77,21 @@ class JSupermanApp {
 
   async execute() {
     try {
-      const config = await this.jConfigs.buildConfig(this.args.getArgs());
-      this.jAllureService.stopsAllureServer();
-      const executions = await this.jSupermanService.run(
+      const config = await this.jc.buildConfig(this.args.getArgs());
+      this.jas.stopsAllureServer();
+      const executions = await this.jss.run(
         config,
         this.args.getArgs()
       );
 
-      const emailConfig = this.args.getArgs()["email-config"]
+      const emailConfig = this.args.getArgs()["email-config"];
 
       if (emailConfig) {
+        const emailService = JMailServiceImpl.getInstance(emailConfig);
 
-        const emailService = JMailServiceImpl.getInstance(emailConfig)
-
-        await emailService.sendMail(JEmailModel.fromConfig(emailConfig, executions))
-
+        await emailService.sendMail(
+          JEmailModel.fromConfig(emailConfig, executions)
+        );
       }
 
       console.log("Processed:", chalk.blue(executions.length));
@@ -93,13 +112,11 @@ const args = new ArgumentParser();
 const app = new JSupermanApp(
   title,
   args,
-  new JSupermanServiceImpl(
-    new JReportServiceImpl(),
-    allureService,
-  ),
+  new JSupermanServiceImpl(new JReportServiceImpl(), allureService),
   new JSupermanConfig(),
   new JFontServiceImpl(),
-  allureService
+  allureService,
+  new JRestServiceImpl()
 );
 
 app.run();

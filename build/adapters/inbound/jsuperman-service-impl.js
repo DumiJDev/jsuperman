@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs_extra_1 = require("fs-extra");
 var newman_1 = __importDefault(require("newman"));
+var entities_1 = require("../../domain/entities");
 var JSupermanServiceImpl = /** @class */ (function () {
     function JSupermanServiceImpl(jReportService, jAllureService) {
         this.jReportService = jReportService;
@@ -81,7 +82,7 @@ var JSupermanServiceImpl = /** @class */ (function () {
                         return [3 /*break*/, 1];
                     case 8:
                         if (options.export)
-                            (0, fs_extra_1.writeFileSync)("./results.json", JSON.stringify(results, null, 2));
+                            (0, fs_extra_1.writeFileSync)(entities_1.OutputResult.Path, JSON.stringify(results, null, 2));
                         if (options.serve === "allure")
                             this.jAllureService.startsAllureServer(options);
                         if (!options.report) return [3 /*break*/, 10];

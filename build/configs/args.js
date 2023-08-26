@@ -44,14 +44,15 @@ var ArgumentParser = /** @class */ (function () {
             default: false,
         })
             .option("report", {
-            alias: "r",
+            alias: "rp",
             describe: "URL to send the report results after test execution.",
             type: "string",
         })
             .option("export", {
             alias: "e",
             describe: "Export test results to a JSON file at the specified path.",
-            type: "string",
+            type: "boolean",
+            default: false
         })
             .option("quiet", {
             alias: "q",
@@ -65,7 +66,7 @@ var ArgumentParser = /** @class */ (function () {
             type: "string",
         })
             .option("email-config", {
-            alias: "e",
+            alias: "ec",
             describe: "SMTP configuration in key:value format separated by semicolons.",
             type: "string",
             coerce: function (arg) {
@@ -76,6 +77,12 @@ var ArgumentParser = /** @class */ (function () {
                     encoding: "utf8",
                 }));
             },
+        })
+            .option("rest", {
+            alias: "r",
+            describe: "Enable REST endpoint to get results",
+            type: "boolean",
+            default: false,
         })
             .option("file", {
             alias: "f",

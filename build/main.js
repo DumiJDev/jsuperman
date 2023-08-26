@@ -51,26 +51,40 @@ var args_1 = __importDefault(require("./configs/args"));
 var jsuperman_config_1 = __importDefault(require("./configs/jsuperman-config"));
 var version_1 = __importDefault(require("./configs/version"));
 var jemail_model_1 = __importDefault(require("./domain/entities/jemail-model"));
+var express_1 = __importDefault(require("express"));
+var rest_service_impl_1 = __importDefault(require("./adapters/inbound/rest-service-impl"));
 var JSupermanApp = /** @class */ (function () {
-    function JSupermanApp(title, args, jSupermanService, jConfigs, jFontService, jAllureService) {
+    function JSupermanApp(title, args, jSupermanService, jConfigs, jFontService, jAllureService, jrestService) {
         this.title = title;
         this.args = args;
         this.jSupermanService = jSupermanService;
         this.jConfigs = jConfigs;
         this.jFontService = jFontService;
         this.jAllureService = jAllureService;
+        this.jrestService = jrestService;
     }
     JSupermanApp.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var cron;
+            var cron, app_1;
             var _this = this;
             return __generator(this, function (_a) {
                 console.log(chalk_1.default.blue(this.jFontService.design(this.title)));
-                console.log(chalk_1.default.bgBlue.white('\t\t\t\t\t\t[' + version_1.default + ']'), "\n\n");
+                console.log(chalk_1.default.bold.bgBlue.white("\t\t\t\t\t\t[" + version_1.default + "]"), "\n\n");
                 cron = this.args.getArgs().cron;
                 try {
+                    if (this.args.getArgs().rest) {
+                        app_1 = (0, express_1.default)();
+                        app_1.use(express_1.default.json());
+                        app_1.use(express_1.default.urlencoded({ limit: "10mb", extended: true }));
+                        app_1.get("/jsuperman/results", function (req, res) {
+                            res.send(_this.jrestService.getResults());
+                        });
+                        app_1.listen(7777, function () {
+                            return console.log("Listen in port", chalk_1.default.bgYellow.bold.white(7777));
+                        });
+                    }
                     if (cron) {
-                        console.log("Scheduled:", chalk_1.default.blue(cron));
+                        console.log("Scheduled:", chalk_1.default.bgBlue.bold.white(cron));
                         (0, node_cron_1.schedule)((0, node_cron_1.validate)(cron.replace('"', ""))
                             ? cron.replace('"', "")
                             : "0 0 */2 * * *", function () {
@@ -128,5 +142,5 @@ var JSupermanApp = /** @class */ (function () {
 var title = "JSuperman";
 var allureService = new jallure_service_impl_1.default();
 var args = new args_1.default();
-var app = new JSupermanApp(title, args, new jsuperman_service_impl_1.default(new jreport_service_impl_1.default(), allureService), new jsuperman_config_1.default(), new jfont_service_impl_1.default(), allureService);
+var app = new JSupermanApp(title, args, new jsuperman_service_impl_1.default(new jreport_service_impl_1.default(), allureService), new jsuperman_config_1.default(), new jfont_service_impl_1.default(), allureService, new rest_service_impl_1.default());
 app.run();
