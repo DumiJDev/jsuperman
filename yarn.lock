@@ -264,19 +264,6 @@ ajv@^6.12.3:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-allure-commandline@^2.23.0:
-  version "2.23.0"
-  resolved "https://registry.npmjs.org/allure-commandline/-/allure-commandline-2.23.0.tgz"
-  integrity sha512-bfAbyQzke0Gj48bxIAhHOcJ6DluYeR4uz3iQ1wJWx7TgGA1gazN1PXUtpr+wnX9eXCTRApEuggaJIduLik7Wsg==
-
-allure-js-commons@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/allure-js-commons/-/allure-js-commons-2.4.0.tgz"
-  integrity sha512-mIQKAA91ihtMPzHJh7fQib/8MhZaUQ0oYtqFzS//5/Q+ILbMWW3WD2ISWtwniFAF2XWdRFjZ013IfUuKusbh1g==
-  dependencies:
-    properties "^1.2.1"
-    uuid "^8.3.0"
-
 ansi-regex@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz"
@@ -1284,13 +1271,6 @@ neo-async@^2.6.0:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-newman-reporter-allure@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/newman-reporter-allure/-/newman-reporter-allure-2.4.0.tgz#9cac1bbfea5353610778b3bb890d210d019dddac"
-  integrity sha512-UZfR+PE4uxNO8VZ/WRWwXDpFsekzEsawyZoLlNp9k4Ch6dcI6YqOn3QYjqfB0tJ8gmVctUQ4bg8D7ydjLvr03A==
-  dependencies:
-    allure-js-commons "2.4.0"
-
 newman@^5.3.2:
   version "5.3.2"
   resolved "https://registry.npmjs.org/newman/-/newman-5.3.2.tgz"
@@ -1523,11 +1503,6 @@ pretty-ms@7.0.1:
   integrity sha512-973driJZvxiGOQ5ONsFhOF/DtzPMOMtgC11kCpUrPGMTgqp2q/1gwzCquocrN33is0VZ5GFHXZYMM9l6h67v2Q==
   dependencies:
     parse-ms "^2.1.0"
-
-properties@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/properties/-/properties-1.2.1.tgz"
-  integrity sha512-qYNxyMj1JeW54i/EWEFsM1cVwxJbtgPp8+0Wg9XjNaK6VE/c4oRi6PNu5p7w1mNXEIQIjV5Wwn8v8Gz82/QzdQ==
 
 proxy-addr@~2.0.7:
   version "2.0.7"
@@ -1914,7 +1889,7 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
 
-uuid@8.3.2, uuid@^8.3.0:
+uuid@8.3.2:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==

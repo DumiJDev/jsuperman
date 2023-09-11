@@ -42,7 +42,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var chalk_1 = __importDefault(require("chalk"));
 var node_cron_1 = require("node-cron");
-var jallure_service_impl_1 = __importDefault(require("./adapters/inbound/jallure-service-impl"));
 var jfont_service_impl_1 = __importDefault(require("./adapters/inbound/jfont-service-impl"));
 var jsuperman_service_impl_1 = __importDefault(require("./adapters/inbound/jsuperman-service-impl"));
 var jemail_service_impl_1 = __importDefault(require("./adapters/outbound/jemail-service-impl"));
@@ -54,33 +53,33 @@ var jemail_model_1 = __importDefault(require("./domain/entities/jemail-model"));
 var express_1 = __importDefault(require("express"));
 var rest_service_impl_1 = __importDefault(require("./adapters/inbound/rest-service-impl"));
 var JSupermanApp = /** @class */ (function () {
-    function JSupermanApp(title, args, jSupermanService, jConfigs, jFontService, jAllureService, jrestService) {
+    function JSupermanApp(title, args, jss, jc, jfs, jrs) {
         this.title = title;
         this.args = args;
-        this.jSupermanService = jSupermanService;
-        this.jConfigs = jConfigs;
-        this.jFontService = jFontService;
-        this.jAllureService = jAllureService;
-        this.jrestService = jrestService;
+        this.jss = jss;
+        this.jc = jc;
+        this.jfs = jfs;
+        this.jrs = jrs;
     }
     JSupermanApp.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var cron, app_1;
+            var _a, cron, rest, port, app_1;
             var _this = this;
-            return __generator(this, function (_a) {
-                console.log(chalk_1.default.blue(this.jFontService.design(this.title)));
+            return __generator(this, function (_b) {
+                console.log(chalk_1.default.blue(this.jfs.design(this.title)));
                 console.log(chalk_1.default.bold.bgBlue.white("\t\t\t\t\t\t[" + version_1.default + "]"), "\n\n");
-                cron = this.args.getArgs().cron;
+                _a = this.args.getArgs(), cron = _a.cron, rest = _a.rest, port = _a.port;
                 try {
-                    if (this.args.getArgs().rest) {
+                    if (rest) {
                         app_1 = (0, express_1.default)();
                         app_1.use(express_1.default.json());
                         app_1.use(express_1.default.urlencoded({ limit: "10mb", extended: true }));
                         app_1.get("/jsuperman/results", function (req, res) {
-                            res.send(_this.jrestService.getResults());
+                            var _a = req.query, page = _a.page, size = _a.size;
+                            res.send(_this.jrs.getResults({ page: page, size: size }));
                         });
-                        app_1.listen(7777, function () {
-                            return console.log("Listen in port", chalk_1.default.bgYellow.bold.white(7777));
+                        app_1.listen(port ? port : 7777, function () {
+                            return console.log("Listen in port", chalk_1.default.bgYellow.bold.white(port ? port : 7777));
                         });
                     }
                     if (cron) {
@@ -110,11 +109,10 @@ var JSupermanApp = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
-                        return [4 /*yield*/, this.jConfigs.buildConfig(this.args.getArgs())];
+                        return [4 /*yield*/, this.jc.buildConfig(this.args.getArgs())];
                     case 1:
                         config = _a.sent();
-                        this.jAllureService.stopsAllureServer();
-                        return [4 /*yield*/, this.jSupermanService.run(config, this.args.getArgs())];
+                        return [4 /*yield*/, this.jss.run(config, this.args.getArgs())];
                     case 2:
                         executions = _a.sent();
                         emailConfig = this.args.getArgs()["email-config"];
@@ -140,7 +138,6 @@ var JSupermanApp = /** @class */ (function () {
     return JSupermanApp;
 }());
 var title = "JSuperman";
-var allureService = new jallure_service_impl_1.default();
 var args = new args_1.default();
-var app = new JSupermanApp(title, args, new jsuperman_service_impl_1.default(new jreport_service_impl_1.default(), allureService), new jsuperman_config_1.default(), new jfont_service_impl_1.default(), allureService, new rest_service_impl_1.default());
+var app = new JSupermanApp(title, args, new jsuperman_service_impl_1.default(new jreport_service_impl_1.default()), new jsuperman_config_1.default(), new jfont_service_impl_1.default(), new rest_service_impl_1.default());
 app.run();

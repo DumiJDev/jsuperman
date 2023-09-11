@@ -43,9 +43,8 @@ var fs_extra_1 = require("fs-extra");
 var newman_1 = __importDefault(require("newman"));
 var entities_1 = require("../../domain/entities");
 var JSupermanServiceImpl = /** @class */ (function () {
-    function JSupermanServiceImpl(jReportService, jAllureService) {
+    function JSupermanServiceImpl(jReportService) {
         this.jReportService = jReportService;
-        this.jAllureService = jAllureService;
     }
     JSupermanServiceImpl.prototype.run = function (list, options) {
         return __awaiter(this, void 0, void 0, function () {
@@ -54,8 +53,6 @@ var JSupermanServiceImpl = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         results = [];
-                        if ((0, fs_extra_1.pathExistsSync)("allure-results"))
-                            (0, fs_extra_1.removeSync)("allure-results");
                         _i = 0, list_1 = list;
                         _a.label = 1;
                     case 1:
@@ -81,10 +78,8 @@ var JSupermanServiceImpl = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 1];
                     case 8:
-                        if (options.export)
+                        if (options.export || options.rest)
                             (0, fs_extra_1.writeFileSync)(entities_1.OutputResult.Path, JSON.stringify(results, null, 2));
-                        if (options.serve === "allure")
-                            this.jAllureService.startsAllureServer(options);
                         if (!options.report) return [3 /*break*/, 10];
                         return [4 /*yield*/, this.jReportService.report({
                                 executions: results,
@@ -121,7 +116,7 @@ var JSupermanServiceImpl = /** @class */ (function () {
                 newmanOptions = {
                     collection: collection,
                     environment: environment,
-                    reporters: ["cli", "allure"],
+                    reporters: ["cli"],
                     globals: options === null || options === void 0 ? void 0 : options.globals,
                     iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1,
                 };
@@ -135,7 +130,7 @@ var JSupermanServiceImpl = /** @class */ (function () {
             return __generator(this, function (_a) {
                 newmanOptions = {
                     collection: collection,
-                    reporters: ["cli", "allure"],
+                    reporters: ["cli"],
                     globals: options === null || options === void 0 ? void 0 : options.globals,
                     iterationCount: (options === null || options === void 0 ? void 0 : options.iteration) ? options.iteration : 1,
                 };

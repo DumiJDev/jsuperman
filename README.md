@@ -84,6 +84,12 @@ structure:
 
 <p>Result newman executions</p>
 
+<code>jsuperman -f file -r</code>
+
+<p>OR</p>
+
+<code>jsuperman -f file --rest</code>
+
 <code>GET http://hostname:7777/jsuperman/results</code>
 
 <h2>💻 Built with</h2>

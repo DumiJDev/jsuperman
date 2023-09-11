@@ -17,7 +17,6 @@
     "clark": "./bin/jsuperman"
   },
   "dependencies": {
-    "allure-commandline": "^2.23.0",
     "axios": "^1.4.0",
     "chalk": "4.1.2",
     "ejs": "^3.1.9",
@@ -25,7 +24,6 @@
     "figlet": "^1.6.0",
     "fs-extra": "^11.1.1",
     "newman": "^5.3.2",
-    "newman-reporter-allure": "^2.4.0",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.4",
     "tree-kill": "^1.2.2",

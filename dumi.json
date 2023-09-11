@@ -1,0 +1,27 @@
+{
+	"id": "461d1e28-895a-4ce2-9af3-6439369cb5c6",
+	"name": "DUMILDES",
+	"values": [
+		{
+			"key": "host",
+			"value": "http://wkslptah81:7800/api",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "AppId",
+			"value": "user2",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "AppToken",
+			"value": "user2",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-09-08T12:37:30.055Z",
+	"_postman_exported_using": "Postman/10.17.5"
+}

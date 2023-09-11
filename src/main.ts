@@ -3,7 +3,6 @@
 import chalk from "chalk";
 import { schedule, validate } from "node-cron";
 
-import JAllureServerServiceImpl from "./adapters/inbound/jallure-service-impl";
 import JFontServiceImpl from "./adapters/inbound/jfont-service-impl";
 import JSupermanServiceImpl from "./adapters/inbound/jsuperman-service-impl";
 import JMailServiceImpl from "./adapters/outbound/jemail-service-impl";
@@ -12,7 +11,6 @@ import ArgumentParser from "./configs/args";
 import JSupermanConfig from "./configs/jsuperman-config";
 import version from "./configs/version";
 import JEmailModel from "./domain/entities/jemail-model";
-import JAllureServerService from "./domain/services/jallure-service";
 import JFontService from "./domain/services/jfont-service";
 import JSupermanService from "./domain/services/jsuperman-service";
 import express from "express";
@@ -26,29 +24,37 @@ class JSupermanApp {
     private readonly jss: JSupermanService,
     private readonly jc: JSupermanConfig,
     private readonly jfs: JFontService,
-    private readonly jas: JAllureServerService,
     private readonly jrs: JRestService
   ) {}
 
   async run() {
     console.log(chalk.blue(this.jfs.design(this.title)));
-    console.log(chalk.bold.bgBlue.white("\t\t\t\t\t\t[" + version + "]"), "\n\n");
+    console.log(
+      chalk.bold.bgBlue.white("\t\t\t\t\t\t[" + version + "]"),
+      "\n\n"
+    );
 
-    const { cron } = this.args.getArgs();
+    const { cron, rest, port } = this.args.getArgs();
 
     try {
-      if (this.args.getArgs().rest) {
+      if (rest) {
         const app = express();
 
         app.use(express.json());
         app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
         app.get("/jsuperman/results", (req, res) => {
-          res.send(this.jrs.getResults());
+          const { page, size } = req.query;
+          res.send(
+            this.jrs.getResults({ page: page as string, size: size as string })
+          );
         });
 
-        app.listen(7777, () =>
-          console.log("Listen in port", chalk.bgYellow.bold.white(7777))
+        app.listen(port ? port : 7777, () =>
+          console.log(
+            "Listen in port",
+            chalk.bgYellow.bold.white(port ? port : 7777)
+          )
         );
       }
 
@@ -78,11 +84,7 @@ class JSupermanApp {
   async execute() {
     try {
       const config = await this.jc.buildConfig(this.args.getArgs());
-      this.jas.stopsAllureServer();
-      const executions = await this.jss.run(
-        config,
-        this.args.getArgs()
-      );
+      const executions = await this.jss.run(config, this.args.getArgs());
 
       const emailConfig = this.args.getArgs()["email-config"];
 
@@ -106,16 +108,13 @@ class JSupermanApp {
 }
 
 const title = "JSuperman";
-
-const allureService = new JAllureServerServiceImpl();
 const args = new ArgumentParser();
 const app = new JSupermanApp(
   title,
   args,
-  new JSupermanServiceImpl(new JReportServiceImpl(), allureService),
+  new JSupermanServiceImpl(new JReportServiceImpl()),
   new JSupermanConfig(),
   new JFontServiceImpl(),
-  allureService,
   new JRestServiceImpl()
 );
 
