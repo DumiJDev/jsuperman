@@ -1,6 +1,6 @@
 <h1 id="title" align="center">JSuperman CLI</h1>
 
-<p align="center"><img src="https://socialify.git.ci/DumiJDev/superman/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Solid&pulls=1&stargazers=1&theme=Dark" alt="Project Image"></p>
+<p align="center"><img src="https://socialify.git.ci/DumijDev/jsuperman/image?description=1&font=KoHo&language=1&name=1&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Auto" alt="jsuperman" width="640" height="320" /></p>
 
 <p id="description">JSuperman CLI is a monitoring tool built on Newman, designed for executing API tests. It enables users to run test collections by specifying JSON file paths or URLs. The tool supports optional environment files and generates reports in CLI HTML and Allure formats. Its aim is to simplify API testing, provide detailed reports, and assist in quality assurance.</p>
 
