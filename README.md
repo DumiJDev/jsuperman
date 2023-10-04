@@ -1,104 +1,84 @@
-<h1 id="title" align="center">JSuperman cli</h1>
+<h1 id="title" align="center">JSuperman CLI</h1>
 
-<p align="center"><img src="https://socialify.git.ci/DumiJDev/superman/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Solid&pulls=1&stargazers=1&theme=Dark" alt="project-image"></p>
+<p align="center"><img src="https://socialify.git.ci/DumiJDev/superman/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Solid&pulls=1&stargazers=1&theme=Dark" alt="Project Image"></p>
 
-<p id="description">The project is a Node.js library that provides a command-line interface (CLI) for running API test collections using Newman. It allows users to execute multiple collections by specifying JSON file paths or URLs. The library supports optional environment files and generates reports in CLI HTML and Allure formats. Its goal is to simplify API testing provide detailed reports and aid in quality assurance.</p>
+<p id="description">JSuperman CLI is a monitoring tool built on Newman, designed for executing API tests. It enables users to run test collections by specifying JSON file paths or URLs. The tool supports optional environment files and generates reports in CLI HTML and Allure formats. Its aim is to simplify API testing, provide detailed reports, and assist in quality assurance.</p>
 
-<h2>🛠️ Installation Steps:</h2>
-npm:
-<p>1. npm install -g jsuperman</p>
-yarn:
-<p>2. yarn add global jsuperman</p>
+<h2>🛠️ Installation:</h2>
 
-<h2>🏃🏾‍♂️ How run</h2>
+You can install JSuperman CLI globally using npm or yarn:
 
-<p>Is mandatory to pass the path to a config file (json or yaml) with following format:</p>
+**Via npm:**
+```
+npm install -g jsuperman
+```
 
-<p>jsuperman -f /path/to/config/file</p>
+**Via yarn:**
+```
+yarn global add jsuperman
+```
 
-<code>
-    <pre>
-    [
-        {
-            "collection": "path/to/exported/collection/json/or/a/postman/collection/url",
-            "environment": "path/to/environment/json"
-        }
-    ]
-    </pre>
-</code>
+<h2>🏃🏾‍♂️ How to Use:</h2>
 
-<h3>* Up allure server with allure results</h3>
+To execute tests, provide the path to a configuration file (json or yaml) with the following format:
 
-<p>jsuperman -f /path/to/config/file -s </p>
+```
+jsuperman -f /path/to/config/file
+```
 
-<p>In quiet mode</p>
-<p>jsuperman -f /path/to/config/file -s -q </p>
+Example configuration file structure:
 
-<p>Specified port</p>
-<p>jsuperman -f /path/to/config/file -s -p <i>port</i></p>
+```json
+[
+    {
+        "collection": "path/to/exported/collection/json/or/a/postman/collection/url",
+        "environment": "path/to/environment/json"
+    }
+]
+```
 
-<h3>Scheduling tests</h3>
+**Available Options:**
+- **-g, --globals:** Set global variables for the test execution.
+- **-p, --port:** Specify the port for accessing the generated report.
+- **-i, --iteration:** Number of test execution iterations (default is 1).
+- **-u, --url:** URL to access test collections and environments.
+- **-s, --serve:** Run a server after generating the report for easy access.
+- **-n, --native:** Use the native reporter to generate the report (default is false).
+- **-rp, --report:** URL to send the report results after test execution.
+- **-e, --export:** Export test results to a JSON file at the specified path.
+- **-q, --quiet:** Run the server in quiet mode to minimize log output.
+- **-c, --cron:** Schedule JSuperman to run using a cron expression.
+- **-ec, --email-config:** SMTP configuration in key:value format separated by semicolons.
+- **-r, --rest:** Enable REST endpoint to get results.
+- **-f, --file:** Path to a file containing collections and environments.
 
-<p>To schedule tests with <b>JSuperman</b> we use <i>cron</i> flag with cron expression:</p>
+**Example:**
+```
+jsuperman -f /path/to/config/file -s -p 8080
+```
 
-<p>jsuperman -f /path/to/config/file --cron "0 0 0 * * *"</p>
+<h2>📊 Reports and Results:</h2>
 
-or
+After running the tests, you can access the results using the REST endpoint:
 
-<p>jsuperman -f /path/to/config/file -c "0 0 0 * * *"</p>
+```
+GET http://hostname:7777/jsuperman/results
+```
 
-<h3>Send email with results (beta)</h3>
-
-<p>jsuperman -f /path/to/config/file -e /path/to/email/config/file/json</p>
-
-structure:
-
-<code>
-    <pre>
-        {
-            "smtp": {
-                "host": "host",
-                "port": port,
-                //auth is optional
-                "auth": {
-                    "user": "user",
-                    "pass": "password"
-                    }
-                },
-            "template": "path/to/ejs/template/file",
-            "content": "Content of email if doesn't a template",
-            "subject": "subject",
-            "to": [
-                "email1",
-                "emailn"
-            ],
-            "from": {
-                "name": "your personal name or team name",
-                "email": "email"
-            }
-}
-    </pre>
-</code>
-
-<h3>Results endpoint</h3>
-
-<p>Result newman executions</p>
-
-<code>GET http://hostname:7777/jsuperman/results</code>
-
-<h2>💻 Built with</h2>
+<h2>💻 Technologies Used:</h2>
 
 Technologies used in the project:
 
 - Typescript
 - NodeJS
 
-<a href="https://www.buymeacoffee.com/dumijdev"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=dumijdev&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+**Support the Project:**
+If you find JSuperman CLI helpful, consider [buying me a coffee](https://www.buymeacoffee.com/dumijdev)!
 
 <h2>🛡️ License:</h2>
 
-This project is licensed under the MIT
+This project is licensed under the MIT License. You are free to use it as a base for other projects or for personal use on your machines. If changing the license is necessary, please let me know.
 
-<h2>Contributing</h2>
+<h2>Contributions</h2>
 
-Opened for contributions 😅
+We are open to contributions! Feel free to collaborate with us.
